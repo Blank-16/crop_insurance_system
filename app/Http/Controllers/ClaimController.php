@@ -39,17 +39,17 @@ class ClaimController extends Controller
 
         // Check if policy is active
         if ($policy->status !== 'active') {
-            return back()->with('error', 'You can only file claims against active policies.');
+            return back()->with('error', 'Action denied: Claims can only be filed against currently active policies.');
         }
 
         // Check if policy expired
         if ($policy->end_date && now()->startOfDay()->greaterThan($policy->end_date)) {
-            return back()->with('error', 'This policy has expired.');
+            return back()->with('error', 'This policy expired on ' . \Carbon\Carbon::parse($policy->end_date)->format('M d, Y') . '.');
         }
 
         // Check for duplicate claim on same policy
-        if (Claim::where('policy_id', $policy->id)->exists()) {
-            return back()->with('error', 'You have already filed a claim for this policy.');
+        if (Claim::where('policy_id', $policy->id)->whereNotIn('status', ['Rejected'])->exists()) {
+            return back()->with('error', 'A claim already exists for this policy and is currently being processed.');
         }
 
         $calculatedAmount = ($policy->plan->coverage * $request->damage_percentage) / 100;
@@ -73,7 +73,7 @@ class ClaimController extends Controller
             $claim->documents()->create(['file_path' => $path]);
         }
 
-        return redirect()->route('farmer.claims.index')->with('success', 'Claim submitted successfully. Estimated amount: $'.number_format($calculatedAmount, 2));
+        return redirect()->route('farmer.claims.index')->with('success', 'Claim submitted successfully. Awaiting review by your provider.');
     }
 
     public function show(Claim $claim)

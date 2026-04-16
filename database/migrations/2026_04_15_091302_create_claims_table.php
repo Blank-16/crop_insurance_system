@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('claims', function (Blueprint $table) {
             $table->id();
             $table->foreignId('policy_id')->constrained()->cascadeOnDelete();
-            $table->enum('status', ['Submitted', 'Under Review', 'Approved', 'Rejected'])->default('Submitted');
+            $table->enum('status', ['Submitted', 'Under Review', 'field_verification', 'Approved', 'Rejected'])->default('Submitted');
             $table->text('description');
             $table->timestamps();
         });

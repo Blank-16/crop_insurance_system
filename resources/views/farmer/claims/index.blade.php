@@ -38,8 +38,8 @@
                             </thead>
                             <tbody>
                                 @forelse($claims as $claim)
-                                    <tr class="hover:bg-gray-50 border-b">
-                                        <td class="px-4 py-2">
+                                    <tr class="hover:bg-indigo-50 even:bg-gray-50 border-b transition duration-150">
+                                        <td class="px-4 py-3">
                                             <a href="{{ route('farmer.claims.show', $claim->id) }}" class="text-indigo-600 hover:text-indigo-900 font-semibold hover:underline">
                                                 #{{ $claim->id }}
                                             </a>
@@ -68,12 +68,18 @@
                                                 <div class="text-xs mt-1 text-red-600 italic break-words max-w-[150px]">{{ $claim->remarks }}</div>
                                             @endif
                                         </td>
-                                        <td class="px-4 py-2 whitespace-nowrap">{{ $claim->created_at->format('M d, Y') }}</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500" title="{{ $claim->created_at->format('M d, Y g:i A') }}">
+                                            {{ $claim->created_at->diffForHumans() }}
+                                        </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="px-4 py-8 text-center text-gray-500">
-                                            <p class="mb-2">You haven't filed any claims yet.</p>
+                                        <td colspan="7" class="px-4 py-12 text-center text-gray-500">
+                                            <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                            </svg>
+                                            <p class="mb-2 text-lg font-medium text-gray-900">You haven't filed any claims yet.</p>
+                                            <p class="text-sm text-gray-500">If your crop has suffered damage, you can file a new claim to request compensation.</p>
                                         </td>
                                     </tr>
                                 @endforelse

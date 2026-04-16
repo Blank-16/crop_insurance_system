@@ -13,14 +13,31 @@ class ProposerController extends Controller
     {
         $user = auth()->user();
         $plansCount = $user->insurancePlans()->count();
+
         $policiesCount = Policy::whereHas('plan', function($q) use ($user) {
             $q->where('proposer_id', $user->id);
-        })->count();
+        })->where('status', 'active')->count();
+
+        $pendingPoliciesCount = Policy::whereHas('plan', function($q) use ($user) {
+            $q->where('proposer_id', $user->id);
+        })->where('status', 'pending')->count();
+
         $claimsCount = Claim::whereHas('policy.plan', function($q) use ($user) {
             $q->where('proposer_id', $user->id);
         })->count();
 
-        return view('proposer.dashboard', compact('plansCount', 'policiesCount', 'claimsCount'));
+        $approvedClaimsCount = Claim::whereHas('policy.plan', function($q) use ($user) {
+            $q->where('proposer_id', $user->id);
+        })->where('status', 'Approved')->count();
+
+        $pendingClaimsCount = Claim::whereHas('policy.plan', function($q) use ($user) {
+            $q->where('proposer_id', $user->id);
+        })->whereIn('status', ['Submitted', 'Under Review', 'field_verification'])->count();
+
+        return view('proposer.dashboard', compact(
+            'plansCount', 'policiesCount', 'pendingPoliciesCount',
+            'claimsCount', 'approvedClaimsCount', 'pendingClaimsCount'
+        ));
     }
 
     public function storeProfile(Request $request)
@@ -66,6 +83,18 @@ class ProposerController extends Controller
             'status' => 'required|in:Approved,Rejected,Under Review,field_verification',
             'remarks' => 'required_if:status,Rejected|nullable|string'
         ]);
+
+        $currentStatus = $claim->status;
+        $newStatus = $request->status;
+
+        // Prevent invalid status transitions
+        if ($currentStatus === 'Submitted' && in_array($newStatus, ['Approved', 'Rejected'])) {
+            return back()->with('error', 'Invalid transition: Claim must be reviewed before final approval/rejection.');
+        }
+
+        if (in_array($currentStatus, ['Approved', 'Rejected'])) {
+            return back()->with('error', 'Action denied: Cannot modify a claim that has already reached a final decision.');
+        }
 
         $claim->update([
             'status' => $request->status,
