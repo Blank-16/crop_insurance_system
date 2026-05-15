@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\InsurancePlan;
 use App\Models\Policy;
 use App\Models\FarmerProfile;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class FarmerController extends Controller
@@ -94,8 +95,31 @@ class FarmerController extends Controller
 
     public function policies()
     {
-        $policies = auth()->user()->policies()->with('plan.proposer')->latest()->paginate(10);
+        $policies = auth()->user()->policies()->with('plan.proposer.proposerProfile', 'farmer.farmerProfile')->latest()->paginate(10);
         return view('farmer.policies', compact('policies'));
+    }
+
+    public function downloadPolicyPdf(Policy $policy)
+    {
+        $user = auth()->user();
+
+        // Ensure the policy belongs to the authenticated farmer
+        if ($policy->farmer_id !== $user->id) {
+            abort(403, 'You are not authorized to download this policy.');
+        }
+
+        if ($policy->status !== 'active') {
+            return back()->with('error', 'Policy documents are only available for active policies.');
+        }
+
+        $policy->load('plan.proposer.proposerProfile', 'farmer.farmerProfile');
+
+        $pdf = Pdf::loadView('farmer.policies.pdf', compact('policy'))
+                  ->setPaper('a4', 'portrait');
+
+        $filename = 'policy-' . str_pad($policy->id, 6, '0', STR_PAD_LEFT) . '.pdf';
+
+        return $pdf->download($filename);
     }
 
     public function compare(Request $request)

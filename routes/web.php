@@ -53,6 +53,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/plans/compare', [\App\Http\Controllers\FarmerController::class, 'compare'])->name('plans.compare');
         Route::post('/plans/{plan}/apply', [\App\Http\Controllers\FarmerController::class, 'apply'])->name('plans.apply');
         Route::get('/policies', [\App\Http\Controllers\FarmerController::class, 'policies'])->name('policies');
+        Route::get('/policies/{policy}/pdf', [\App\Http\Controllers\FarmerController::class, 'downloadPolicyPdf'])->name('policies.pdf');
         Route::resource('claims', \App\Http\Controllers\ClaimController::class);
     });
 });

@@ -81,8 +81,13 @@ class ProposerController extends Controller
     {
         $request->validate([
             'status' => 'required|in:Approved,Rejected,Under Review,field_verification',
-            'remarks' => 'required_if:status,Rejected|nullable|string'
+            'remarks' => 'nullable|string|max:500',
         ]);
+
+        // Require remarks when rejecting
+        if ($request->status === 'Rejected' && empty(trim($request->remarks ?? ''))) {
+            return back()->withErrors(['remarks' => 'Please provide a reason for rejection.'])->withInput();
+        }
 
         $currentStatus = $claim->status;
         $newStatus = $request->status;
@@ -117,7 +122,7 @@ class ProposerController extends Controller
 
             \App\Models\Notification::create([
                 'user_id' => $claim->policy->farmer_id,
-                'message' => "Your claim #{$claim->id} has been {$request->status}.",
+                'message' => "Your claim #{$claim->id} has been {$request->status}. " . ($request->remarks ? "Reason: {$request->remarks}" : ''),
             ]);
         }
 
