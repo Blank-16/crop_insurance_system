@@ -69,28 +69,17 @@ class FarmerController extends Controller
         return view('farmer.plans', compact('plans'));
     }
 
-    public function apply(Request $request, InsurancePlan $plan)
+    public function apply(Request $request, InsurancePlan $plan, \App\Services\InsuranceService $insuranceService)
     {
-        $user = auth()->user();
-        if (!$user->farmerProfile) {
-            return redirect()->route('profile.edit')->with('error', 'Please complete your profile first.');
+        try {
+            $insuranceService->applyForPlan(auth()->user(), $plan);
+            return back()->with('success', 'Applied for policy successfully. Waiting for Proposer approval.');
+        } catch (\Exception $e) {
+            if ($e->getMessage() === 'Please complete your profile first.') {
+                return redirect()->route('profile.edit')->with('error', $e->getMessage());
+            }
+            return back()->with('error', $e->getMessage());
         }
-
-        $profile = $user->farmerProfile;
-
-        // Eligibility Check
-        if (strtolower(trim($profile->region)) !== strtolower(trim($plan->region)) || 
-            strtolower(trim($profile->crop_type)) !== strtolower(trim($plan->crop_type))) {
-            return back()->with('error', 'You are not eligible for this plan. Your region and main crop must exactly match the plan.');
-        }
-
-        Policy::create([
-            'farmer_id' => $user->id,
-            'plan_id' => $plan->id,
-            'status' => 'pending'
-        ]);
-
-        return back()->with('success', 'Applied for policy successfully. Waiting for Proposer approval.');
     }
 
     public function policies()

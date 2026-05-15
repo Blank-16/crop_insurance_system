@@ -59,20 +59,58 @@
                 </div>
             </div>
 
-            {{-- Claim Health Bar --}}
-            @if($claimsCount > 0)
-                @php $approvalRate = round(($approvedClaimsCount / $claimsCount) * 100); @endphp
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
-                    <div class="flex justify-between items-center mb-2">
-                        <p class="text-sm font-semibold text-gray-700">Claim Approval Rate</p>
-                        <span class="text-sm font-bold text-indigo-600">{{ $approvalRate }}%</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div class="bg-indigo-500 h-2.5 rounded-full transition-all duration-500" style="width: {{ $approvalRate }}%"></div>
-                    </div>
-                    <p class="text-xs text-gray-400 mt-2">{{ $approvedClaimsCount }} approved out of {{ $claimsCount }} total claims.</p>
+            {{-- Charts Section --}}
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <!-- Claim Trends Chart -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100" x-data="{
+                    init() {
+                        let options = {
+                            series: [{ name: 'Claims', data: {{ json_encode($chartData['trend_series']) }} }],
+                            chart: { type: 'area', height: 280, toolbar: { show: false } },
+                            stroke: { curve: 'smooth', width: 3 },
+                            fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.7, opacityTo: 0.1, stops: [0, 90, 100] } },
+                            dataLabels: { enabled: false },
+                            xaxis: { categories: {!! json_encode($chartData['trend_labels']) !!} },
+                            colors: ['#F97316'], // Orange
+                            tooltip: { theme: 'light' }
+                        };
+                        let chart = new window.ApexCharts(this.$refs.trendChart, options);
+                        chart.render();
+                    }
+                }">
+                    <h4 class="text-gray-500 font-medium mb-4 text-sm uppercase tracking-wider">Claim Trends (Last 6 Months)</h4>
+                    <div x-ref="trendChart"></div>
                 </div>
-            @endif
+
+                <!-- Portfolio Distribution Chart -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100" x-data="{
+                    init() {
+                        let options = {
+                            series: {{ json_encode($chartData['portfolio_series']) }},
+                            chart: { type: 'donut', height: 280 },
+                            labels: {!! json_encode($chartData['portfolio_labels']) !!},
+                            colors: ['#8B5CF6', '#3B82F6', '#10B981', '#F43F5E', '#F59E0B'],
+                            plotOptions: { pie: { donut: { size: '70%' } } },
+                            dataLabels: { enabled: false },
+                            legend: { position: 'right' }
+                        };
+                        let chart = new window.ApexCharts(this.$refs.portfolioChart, options);
+                        chart.render();
+                    }
+                }">
+                    <div class="flex justify-between items-start mb-4">
+                        <h4 class="text-gray-500 font-medium text-sm uppercase tracking-wider">Portfolio Distribution</h4>
+                        @if($claimsCount > 0)
+                            @php $approvalRate = round(($approvedClaimsCount / $claimsCount) * 100); @endphp
+                            <div class="text-right">
+                                <span class="text-xs text-gray-400">Approval Rate</span>
+                                <p class="text-lg font-bold text-indigo-600">{{ $approvalRate }}%</p>
+                            </div>
+                        @endif
+                    </div>
+                    <div x-ref="portfolioChart" class="flex justify-center"></div>
+                </div>
+            </div>
 
             {{-- Quick Links --}}
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">

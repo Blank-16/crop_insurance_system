@@ -17,30 +17,62 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 flex flex-col items-center justify-center">
-                    <h4 class="text-gray-500 font-medium mb-2">Claim Resolution</h4>
-                    <div class="w-full bg-gray-200 rounded-full h-4 mb-1">
-                        <div class="bg-green-500 h-4 rounded-full" style="width: {{ $approvedPercentage }}%"></div>
-                    </div>
-                    <div class="flex justify-between w-full text-xs text-gray-600 mt-1">
-                        <span>{{ $approvedPercentage }}% Approved</span>
-                        <span>{{ $rejectedPercentage }}% Rejected</span>
-                    </div>
+                <!-- Claim Resolution Chart -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100" x-data="{
+                    init() {
+                        let options = {
+                            series: {{ json_encode($chartData['status_series']) }},
+                            chart: { type: 'donut', height: 250 },
+                            labels: {!! json_encode($chartData['status_labels']) !!},
+                            colors: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444'],
+                            plotOptions: { pie: { donut: { size: '65%' } } },
+                            dataLabels: { enabled: false },
+                            legend: { position: 'bottom' }
+                        };
+                        let chart = new window.ApexCharts(this.$refs.statusChart, options);
+                        chart.render();
+                    }
+                }">
+                    <h4 class="text-gray-500 font-medium mb-4 text-sm uppercase tracking-wider">Claim Status Distribution</h4>
+                    <div x-ref="statusChart" class="flex justify-center"></div>
                 </div>
                 
-                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                    <h4 class="text-gray-500 font-medium text-sm">Most Claimed Crop</h4>
-                    @if($mostClaimedCrop)
-                        <p class="text-3xl font-bold text-gray-800 mt-2">{{ $mostClaimedCrop->crop_type }}</p>
-                        <p class="text-sm text-gray-500 mt-1">{{ $mostClaimedCrop->total_claims }} Claims filed</p>
-                    @else
-                        <p class="text-xl font-medium text-gray-400 mt-2">No Claim Data</p>
-                    @endif
+                <!-- Crop Distribution Chart -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100" x-data="{
+                    init() {
+                        let options = {
+                            series: [{ name: 'Policies', data: {{ json_encode($chartData['crop_series']) }} }],
+                            chart: { type: 'bar', height: 250, toolbar: { show: false } },
+                            plotOptions: { bar: { borderRadius: 4, horizontal: true } },
+                            dataLabels: { enabled: false },
+                            xaxis: { categories: {!! json_encode($chartData['crop_labels']) !!} },
+                            colors: ['#8B5CF6']
+                        };
+                        let chart = new window.ApexCharts(this.$refs.cropChart, options);
+                        chart.render();
+                    }
+                }">
+                    <h4 class="text-gray-500 font-medium mb-4 text-sm uppercase tracking-wider">Policies by Crop Type</h4>
+                    <div x-ref="cropChart"></div>
                 </div>
 
-                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 text-center flex flex-col justify-center text-indigo-600 font-semibold hover:bg-indigo-50 transition cursor-pointer">
-                    <svg class="w-8 h-8 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
-                    View Full Audit Logs
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 flex flex-col justify-between">
+                    <div>
+                        <h4 class="text-gray-500 font-medium text-sm uppercase tracking-wider">Most Claimed Crop</h4>
+                        @if($mostClaimedCrop)
+                            <p class="text-4xl font-bold text-gray-800 mt-4">{{ $mostClaimedCrop->crop_type }}</p>
+                            <p class="text-sm text-gray-500 mt-2 flex items-center">
+                                <svg class="w-4 h-4 text-red-500 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>
+                                {{ $mostClaimedCrop->total_claims }} Claims filed
+                            </p>
+                        @else
+                            <p class="text-xl font-medium text-gray-400 mt-2">No Claim Data</p>
+                        @endif
+                    </div>
+                    
+                    <a href="{{ route('admin.users') }}" class="mt-6 w-full text-center bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-medium py-3 px-4 rounded-lg transition duration-150 ease-in-out border border-indigo-200">
+                        View System Users
+                    </a>
                 </div>
             </div>
 
