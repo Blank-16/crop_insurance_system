@@ -58,10 +58,14 @@ class ClaimService
                 'target_id' => $claim->id,
             ]);
 
+            $message = "Your claim #{$claim->id} has been {$newStatus}. " . ($remarks ? "Reason: {$remarks}" : '');
+            
             Notification::create([
                 'user_id' => $claim->policy->farmer_id,
-                'message' => "Your claim #{$claim->id} has been {$newStatus}. " . ($remarks ? "Reason: {$remarks}" : ''),
+                'message' => $message,
             ]);
+
+            \App\Events\ClaimStatusUpdated::dispatch($claim, $message);
         }
 
         return $claim;

@@ -157,5 +157,54 @@
         </div>
 
         @stack('scripts')
+        
+        <!-- Toast Notification Container -->
+        <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                function showToast(message) {
+                    const container = document.getElementById('toast-container');
+                    const toast = document.createElement('div');
+                    toast.className = 'bg-indigo-600 text-white px-6 py-4 rounded-lg shadow-xl flex items-center justify-between transform transition-all duration-300 translate-y-10 opacity-0';
+                    toast.innerHTML = `
+                        <div class="flex items-center">
+                            <svg class="w-6 h-6 mr-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                            <div>
+                                <h4 class="font-bold text-sm">New Update</h4>
+                                <p class="text-sm opacity-90">${message}</p>
+                            </div>
+                        </div>
+                        <button onclick="this.parentElement.remove()" class="ml-4 text-white opacity-70 hover:opacity-100">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    `;
+                    container.appendChild(toast);
+                    
+                    // Animate in
+                    setTimeout(() => {
+                        toast.classList.remove('translate-y-10', 'opacity-0');
+                    }, 50);
+
+                    // Auto remove after 5 seconds
+                    setTimeout(() => {
+                        toast.classList.add('opacity-0', 'translate-y-2');
+                        setTimeout(() => toast.remove(), 300);
+                    }, 5000);
+                }
+
+                @auth
+                    @if(auth()->user()->role === 'farmer')
+                        if (window.Echo) {
+                            window.Echo.private('farmer.{{ auth()->id() }}')
+                                .listen('.claim.status.updated', (e) => {
+                                    showToast(e.message);
+                                    // Optional: increment notification counter or reload notifications
+                                });
+                        }
+                    @endif
+                @endauth
+            });
+        </script>
     </body>
 </html>

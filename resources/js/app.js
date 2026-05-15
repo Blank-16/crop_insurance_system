@@ -1,4 +1,5 @@
 import './bootstrap';
+import './echo';
 import ApexCharts from 'apexcharts';
 import Alpine from 'alpinejs';
 
