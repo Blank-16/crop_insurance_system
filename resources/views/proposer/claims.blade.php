@@ -63,7 +63,7 @@
                                             </div>
                                         </td>
                                         <td class="px-4 py-3 font-bold text-gray-800">
-                                            ${{ number_format($claim->calculated_amount, 2) }}
+                                            ₹{{ number_format($claim->calculated_amount, 2) }}
                                         </td>
                                         <td class="px-4 py-3 text-sm text-gray-500" title="{{ $claim->created_at->format('M d, Y g:i A') }}">
                                             {{ $claim->created_at->diffForHumans() }}

@@ -53,7 +53,7 @@
                                             <div class="text-xs text-red-500">{{ $claim->damage_percentage ?? 0 }}% Damage</div>
                                         </td>
                                         <td class="px-4 py-2 font-bold text-gray-800">
-                                            ${{ number_format($claim->calculated_amount, 2) }}
+                                            ₹{{ number_format($claim->calculated_amount, 2) }}
                                         </td>
                                         <td class="px-4 py-2">
                                             @if($claim->documents->isNotEmpty())

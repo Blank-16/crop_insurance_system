@@ -29,13 +29,13 @@
                             </div>
 
                             <div class="col-span-1">
-                                <label for="premium" class="block text-sm font-medium text-gray-700">Premium ($)</label>
+                                <label for="premium" class="block text-sm font-medium text-gray-700">Premium (₹)</label>
                                 <input type="number" step="0.01" name="premium" id="premium" value="{{ old('premium', $plan->premium ?? '') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
                                 @error('premium') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                             </div>
 
                             <div class="col-span-1">
-                                <label for="coverage" class="block text-sm font-medium text-gray-700">Coverage ($)</label>
+                                <label for="coverage" class="block text-sm font-medium text-gray-700">Coverage (₹)</label>
                                 <input type="number" step="0.01" name="coverage" id="coverage" value="{{ old('coverage', $plan->coverage ?? '') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
                                 @error('coverage') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                             </div>

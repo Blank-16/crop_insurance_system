@@ -54,7 +54,7 @@
                                             <div class="text-xs text-gray-500">Region: {{ $policy->plan->region ?? 'N/A' }}</div>
                                         </td>
                                         <td class="px-4 py-3 font-semibold text-gray-800">
-                                            ${{ number_format($policy->plan->coverage, 2) }}
+                                            ₹{{ number_format($policy->plan->coverage, 2) }}
                                         </td>
                                         <td class="px-4 py-3 text-sm text-gray-500" title="{{ $policy->created_at->format('M d, Y g:i A') }}">
                                             {{ $policy->created_at->diffForHumans() }}

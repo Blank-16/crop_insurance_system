@@ -56,7 +56,7 @@
                         </div>
                         <div>
                             <span class="block text-sm text-gray-500">Calculated Payout Amount</span>
-                            <span class="font-bold text-xl text-green-600">${{ number_format($claim->calculated_amount, 2) }}</span>
+                            <span class="font-bold text-xl text-green-600">₹{{ number_format($claim->calculated_amount, 2) }}</span>
                             <p class="text-xs text-gray-400 mt-1">Based on {{ $claim->policy->plan->coverage }} max coverage</p>
                         </div>
                         <div>

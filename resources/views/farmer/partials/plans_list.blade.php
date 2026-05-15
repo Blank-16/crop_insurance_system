@@ -10,8 +10,8 @@
             </div>
             <div class="p-4 space-y-2">
                 <p class="text-sm text-gray-600"><span class="font-semibold text-gray-800">Provided By:</span> {{ $plan->proposer->name ?? 'Unknown Provider' }}</p>
-                <p class="text-sm text-gray-600"><span class="font-semibold text-gray-800">Premium:</span> ${{ number_format($plan->premium, 2) }}</p>
-                <p class="text-sm text-gray-600"><span class="font-semibold text-gray-800">Coverage:</span> ${{ number_format($plan->coverage, 2) }}</p>
+                <p class="text-sm text-gray-600"><span class="font-semibold text-gray-800">Premium:</span> ₹{{ number_format($plan->premium, 2) }}</p>
+                <p class="text-sm text-gray-600"><span class="font-semibold text-gray-800">Coverage:</span> ₹{{ number_format($plan->coverage, 2) }}</p>
                 <p class="text-sm text-gray-600"><span class="font-semibold text-gray-800">Duration:</span> {{ $plan->duration }} Months</p>
             </div>
             @php

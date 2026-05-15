@@ -61,7 +61,7 @@
                                             @endif
                                         </td>
                                         <td class="px-4 py-3 font-bold text-green-700">
-                                            ${{ number_format($policy->plan->coverage ?? 0, 2) }}
+                                            ₹{{ number_format($policy->plan->coverage ?? 0, 2) }}
                                         </td>
                                         <td class="px-4 py-3">
                                             @if($isExpired)

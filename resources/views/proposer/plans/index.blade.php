@@ -42,8 +42,8 @@
                                         <td class="px-4 py-2">#{{ $plan->id }}</td>
                                         <td class="px-4 py-2 font-medium text-gray-800">{{ $plan->crop_type }}</td>
                                         <td class="px-4 py-2">{{ $plan->region }}</td>
-                                        <td class="px-4 py-2">${{ number_format($plan->premium, 2) }}</td>
-                                        <td class="px-4 py-2">${{ number_format($plan->coverage, 2) }}</td>
+                                        <td class="px-4 py-2">₹{{ number_format($plan->premium, 2) }}</td>
+                                        <td class="px-4 py-2">₹{{ number_format($plan->coverage, 2) }}</td>
                                         <td class="px-4 py-2">{{ $plan->duration }} Mos</td>
                                         <td class="px-4 py-2 text-center">
                                             <a href="{{ route('proposer.plans.edit', $plan) }}" class="text-indigo-600 hover:text-indigo-900 font-medium text-sm mr-2">Edit</a>

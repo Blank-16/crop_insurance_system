@@ -112,11 +112,11 @@
     {{-- Coverage Box --}}
     <div class="coverage-box">
         <div class="coverage-item">
-            <div class="coverage-num">${{ number_format($policy->plan->coverage, 0) }}</div>
+            <div class="coverage-num">₹{{ number_format($policy->plan->coverage, 0) }}</div>
             <div class="coverage-label">Max Coverage</div>
         </div>
         <div class="coverage-item">
-            <div class="coverage-num">${{ number_format($policy->plan->premium, 0) }}</div>
+            <div class="coverage-num">₹{{ number_format($policy->plan->premium, 0) }}</div>
             <div class="coverage-label">Annual Premium</div>
         </div>
         <div class="coverage-item">

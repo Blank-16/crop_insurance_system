@@ -54,13 +54,13 @@
                                 <tr class="hover:bg-gray-50 border-b">
                                     <td class="px-4 py-3 font-semibold text-gray-600 border-r bg-gray-50">Premium Amount</td>
                                     @foreach($plans as $plan)
-                                        <td class="px-4 py-3 text-center font-bold text-gray-800">${{ number_format($plan->premium, 2) }}</td>
+                                        <td class="px-4 py-3 text-center font-bold text-gray-800">₹{{ number_format($plan->premium, 2) }}</td>
                                     @endforeach
                                 </tr>
                                 <tr class="hover:bg-gray-50 border-b">
                                     <td class="px-4 py-3 font-semibold text-gray-600 border-r bg-gray-50">Max Coverage</td>
                                     @foreach($plans as $plan)
-                                        <td class="px-4 py-3 text-center font-bold text-green-600">${{ number_format($plan->coverage, 2) }}</td>
+                                        <td class="px-4 py-3 text-center font-bold text-green-600">₹{{ number_format($plan->coverage, 2) }}</td>
                                     @endforeach
                                 </tr>
                                 <tr class="hover:bg-gray-50 border-b">

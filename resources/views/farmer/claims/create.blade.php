@@ -27,7 +27,7 @@
                                         <option value="" disabled selected>-- Select Policy --</option>
                                         @foreach($policies as $policy)
                                             <option value="{{ $policy->id }}" {{ old('policy_id') == $policy->id ? 'selected' : '' }}>
-                                                Plan #{{ $policy->plan->id }} - {{ $policy->plan->crop_type }} ({{ $policy->plan->region }}) - Coverage: ${{ number_format($policy->plan->coverage, 2) }}
+                                                Plan #{{ $policy->plan->id }} - {{ $policy->plan->crop_type }} ({{ $policy->plan->region }}) - Coverage: ₹{{ number_format($policy->plan->coverage, 2) }}
                                             </option>
                                         @endforeach
                                     </select>
