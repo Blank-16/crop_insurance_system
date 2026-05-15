@@ -25,7 +25,7 @@ class ClaimController extends Controller
         return view('farmer.claims.create', compact('policies'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, \App\Services\WeatherVerificationService $weatherService)
     {
         $request->validate([
             'policy_id' => 'required|exists:policies,id',
@@ -61,6 +61,13 @@ class ClaimController extends Controller
             'damage_percentage' => $request->damage_percentage,
             'calculated_amount' => $calculatedAmount,
             'description' => $request->description,
+        ]);
+
+        // Smart Verification
+        $verificationResult = $weatherService->verifyClaim($claim);
+        $claim->update([
+            'verification_flag' => $verificationResult['flag'],
+            'verification_reason' => $verificationResult['reason'],
         ]);
 
         \App\Models\ClaimLog::create([
