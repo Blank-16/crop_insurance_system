@@ -37,11 +37,13 @@ class FarmerController extends Controller
             'land_size' => 'required|string',
             'crop_type' => 'required|string',
             'region' => 'required|string',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
         ]);
 
         auth()->user()->farmerProfile()->updateOrCreate(
             ['user_id' => auth()->id()],
-            $request->only(['land_size', 'crop_type', 'region'])
+            $request->only(['land_size', 'crop_type', 'region', 'latitude', 'longitude'])
         );
 
         return back()->with('status', 'farmer-profile-updated')->with('success', 'Profile updated effectively.');

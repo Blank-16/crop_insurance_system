@@ -10,10 +10,10 @@
             <x-alert />
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <x-card title="Total Users" :value="$usersCount" color="blue" />
-                <x-card title="Total Plans" :value="$plansCount" color="purple" />
-                <x-card title="Total Policies" :value="$policiesCount" color="green" />
-                <x-card title="Total Claims" :value="$claimsCount" color="red" />
+                <x-card :title="__('Total Users')" :value="$usersCount" color="blue" />
+                <x-card :title="__('Total Plans')" :value="$plansCount" color="purple" />
+                <x-card :title="__('Total Policies')" :value="$policiesCount" color="green" />
+                <x-card :title="__('Total Claims')" :value="$claimsCount" color="red" />
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
