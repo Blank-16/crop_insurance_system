@@ -7,13 +7,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/locale/{lang}', function ($lang) {
-    if (in_array($lang, ['en', 'hi', 'bn'])) {
-        session(['locale' => $lang]);
-    }
-    return back();
-})->name('locale.switch');
-
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         $role = auth()->user()->role ?? 'farmer';
